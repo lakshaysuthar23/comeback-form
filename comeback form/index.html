@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comeback Form - Sarkari Portal</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f1f1f1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .app-wrapper {
+            background-color: #ffffff;
+            border: 2px solid #0078D4;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            max-width: 90vw;
+            border-radius: 6px;
+            overflow: hidden;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .govt-header {
+            background-color: #0078D4;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .section {
+            display: none;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .section.active {
+            display: flex;
+        }
+
+        .btn {
+            background-color: #0078D4;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .officer-select {
+            display: flex;
+            justify-content: space-around;
+            gap: 10px;
+        }
+
+        .officer {
+            border: 1px solid #ccc;
+            padding: 10px;
+            cursor: pointer;
+            flex: 1;
+            text-align: center;
+            border-radius: 6px;
+            background-color: #f9f9f9;
+        }
+
+        .officer.selected {
+            border-color: #0078D4;
+            background-color: #e7f1ff;
+        }
+
+        select,
+        input {
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            width: 100%;
+        }
+
+        .success {
+            text-align: center;
+            font-size: 1rem;
+            color: green;
+        }
+
+        .funny-banner {
+            background-color: yellow;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: bold;
+            color: red;
+            text-align: center;
+        }
+
+        .officer-img,
+        .preview-img {
+            width: 100px;
+            height: 133px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin-bottom: 8px;
+        }
+
+        .preview-img {
+            border: 2px solid #ccc;
+        }
+
+        .image-preview {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .signature {
+            max-width: 80px;
+            margin-top: 10px;
+        }
+
+        .summary-block {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .summary-text {
+            flex: 1;
+        }
+
+        .summary-photo {
+            margin-left: 10px;
+        }
+
+        .sign-block {
+            display: flex;
+            justify-content: flex-end;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .sign-label {
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-wrapper">
+        <div class="govt-header">भारत सरकार - कमबैक आवेदन पोर्टल</div>
+
+        <div id="section1" class="section active">
+            <div class="funny-banner">⚠️ Ye ek majak hai. Serious na le. 😄</div>
+            <button class="btn" onclick="nextSection(2)">OK</button>
+        </div>
+
+        <div id="section2" class="section">
+            <p style="color: red;">Sarkar ne comeback ke form bharana start kar diye hain. Aap last date 31-April-2025 se pehle apply kar devein.</p>
+            <p>Apna man pasand Adhikari chune.</p>
+            <div class="officer-select">
+                <div class="officer" onclick="selectOfficer('Dogesh')">
+                    <img src="dogesh.webp" alt="Dogesh" class="officer-img">
+                    <div>Dogesh</div>
+                </div>
+                <div class="officer" onclick="selectOfficer('Billu')">
+                    <img src="billu.webp" alt="Billu" class="officer-img">
+                    <div>Billu</div>
+                </div>
+            </div>
+            <button class="btn" onclick="nextSection(3)">Next</button>
+        </div>
+
+        <div id="section3" class="section">
+            <div class="funny-banner" id="officerStatus">Adhikari aapka form check karega...</div>
+            <label for="name">Naam:</label>
+            <input type="text" id="name" placeholder="Apna naam daalein">
+
+            <label for="reason">Comeback kyun karna chahte hain?</label>
+            <select id="reason">
+                <option value="">Pehle reason chunein...</option>
+                <option value="Gandiya phati padi h">Gandiya phati padi h</option>
+                <option value="Garibi bhut h">Garibi bhut h</option>
+                <option value="mujhe bhi nhi pata">Mujhe bhi nhi pata</option>
+            </select>
+
+            <label for="when">Kab tak karwana hai comeback?</label>
+            <select id="when" onchange="checkUrgency()">
+                <option value="">Select delivery time</option>
+                <option value="isi saal">Isi saal</option>
+                <option value="agle saal">Agle saal (har baar ki tarah)</option>
+                <option value="aaj hi">Aaj hi</option>
+            </select>
+
+            <div id="instantMessage" class="funny-banner" style="display:none;"></div>
+
+            <label for="photo">Apna photo (passport size) upload karein:</label>
+            <input type="file" id="photo" accept="image/*" onchange="previewImage(event)">
+            <div class="image-preview"><img id="photoPreview" class="preview-img" src="" alt="Preview" style="display:none;"></div>
+
+            <button class="btn" onclick="submitForm()">Submit</button>
+        </div>
+
+        <div id="section4" class="section">
+            <div class="success">✅ Aapki comeback safalta se register ho chuki hai!</div>
+            <div id="userSummary"></div>
+        </div>
+    </div>
+
+    <script>
+        let selectedOfficer = '';
+
+        function nextSection(num) {
+            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+            document.getElementById('section' + num).classList.add('active');
+
+            if (num === 3 && selectedOfficer) {
+                document.getElementById('officerStatus').innerText = `${selectedOfficer} aapka form check kar raha hai...`;
+            }
+        }
+
+        function selectOfficer(name) {
+            selectedOfficer = name;
+            document.querySelectorAll('.officer').forEach(el => el.classList.remove('selected'));
+            const el = [...document.querySelectorAll('.officer')].find(e => e.innerText === name);
+            el.classList.add('selected');
+        }
+
+        function checkUrgency() {
+            const when = document.getElementById('when').value;
+            const msg = document.getElementById('instantMessage');
+
+            if (when === 'aaj hi') {
+                msg.innerText = '₹500 ki hari hari pati dede niche se, kaam hojayega';
+                msg.style.backgroundColor = 'lightgreen';
+                msg.style.display = 'block';
+            } else if (when === 'isi saal') {
+                msg.innerText = 'Bhai late ho jayegi, aaj vala option lele';
+                msg.style.backgroundColor = 'lightyellow';
+                msg.style.display = 'block';
+            } else if (when === 'agle saal') {
+                msg.innerText = 'Bhai fir chudegi dekhle, aaj vala option lele';
+                msg.style.backgroundColor = '#ffcccb';
+                msg.style.display = 'block';
+            } else {
+                msg.style.display = 'none';
+            }
+        }
+
+        function previewImage(event) {
+            const reader = new FileReader();
+            reader.onload = function () {
+                const output = document.getElementById('photoPreview');
+                output.src = reader.result;
+                output.style.display = 'block';
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+
+        function submitForm() {
+            const name = document.getElementById('name').value;
+            const reason = document.getElementById('reason').value;
+            const when = document.getElementById('when').value;
+            const photo = document.getElementById('photoPreview').src;
+
+            if (!name || !reason || !when || !selectedOfficer || !photo) {
+                alert('Kripya sabhi fields bharein aur adhikari chunein');
+                return;
+            }
+
+            nextSection(4);
+
+            document.getElementById('userSummary').innerHTML = `
+                <div class="summary-block">
+                    <div class="summary-text">
+                        <p><strong>Aavedak:</strong> ${name}</p>
+                        <p><strong>Reason:</strong> ${reason}</p>
+                        <p><strong>Comeback Timing:</strong> ${when}</p>
+                    </div>
+                    <div class="summary-photo">
+                        <img src="${photo}" class="preview-img" alt="User Photo">
+                    </div>
+                </div>
+                <p style="color: red; font-size: 13px;"><strong>File PMO Department bhej di gayi hai. Ab aapka comeback koi nhi rok sakta</strong></p>
+                <p style="color: green; font-size: 13px;"><strong>Iska screenshot lekr social media par daldeve. Banane vale ka bhala hojayega</strong></p>
+                <div class="sign-block">
+                    <p class="sign-label">Adhikari: ${selectedOfficer}</p>
+                    <img src="${selectedOfficer.toLowerCase()}-sign.png" alt="Sign" class="signature">
+                </div>
+            `;
+        }
+    </script>
+</body>
+
+</html>
